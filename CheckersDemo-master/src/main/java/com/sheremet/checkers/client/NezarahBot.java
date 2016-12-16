@@ -39,10 +39,14 @@ public class NezarahBot implements CheckersBot{
         Step s;
         if(!hits.isEmpty()){
             int i = hits.size();
-            s = hits.get(new Random().nextInt(i));
+            int ran = new Random().nextInt(i);
+            System.out.println("ran hit= " + ran + "; size = " + i);
+            s = hits.get(ran);
         }else{
             int i = steps.size();
-            s = steps.get(new Random().nextInt(i));
+            int ran = new Random().nextInt(i);
+            System.out.println("ran hit= " + ran + "; size = " + i);
+            s = steps.get(ran);
         }
         return s;
     }
@@ -92,17 +96,20 @@ public class NezarahBot implements CheckersBot{
                 // if position next to opposite player check is valid and empty
                 if (nextToNext.getLetter() != null && nextToNext.getNumber() != null && board.get(nextToNext) == null) {
                     // should not check if step is valid cause we can always hit another checker
-                    hits.add(new Step(Arrays.asList(new StepUnit(checker.getPosition(), nextToNext))));
+                    Step st = new Step(Arrays.asList(new StepUnit(checker.getPosition(), nextToNext)));
+                    if(validator.isValidStep(board, st, color))
+                        hits.add(st);
                 }
             }
         } else {
             Step s = new Step(Arrays.asList(new StepUnit(checker.getPosition(), next)));
             try {
                 // check if valid step for board
-                board.apply(s);
-                steps.add(s);
+                if(validator.isValidStep(board, s, color)){
+                    board.apply(s);
+                    steps.add(s);
+                }
             } catch (Exception e) {
-
             }
         }
     }
