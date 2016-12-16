@@ -24,8 +24,8 @@ public class NezarahBot implements CheckersBot{
     private Validator validator;
     
 
-    public NezarahBot(BoardRenderer renderer) {
-        this.name = "NezarachBot";
+    public NezarahBot(BoardRenderer renderer, String name) {
+        this.name = name;
         this.renderer = renderer;
         this.validator = new Validator();
     }
@@ -34,24 +34,21 @@ public class NezarahBot implements CheckersBot{
     public Step next(final Board board) {
         List<Step> hits = new ArrayList<>();
         List<Step> steps = new ArrayList<>();
-
-        prepareStep(board, steps, hits);
+        calcStep(board, steps, hits);
         Step s;
         if(!hits.isEmpty()){
             int i = hits.size();
             int ran = new Random().nextInt(i);
-            System.out.println("ran hit= " + ran + "; size = " + i);
             s = hits.get(ran);
         }else{
             int i = steps.size();
             int ran = new Random().nextInt(i);
-            System.out.println("ran hit= " + ran + "; size = " + i);
             s = steps.get(ran);
         }
         return s;
     }
 
-    private void prepareStep(final Board board, List<Step> steps, List<Step> hits) {
+    private void calcStep(final Board board, List<Step> steps, List<Step> hits) {
         for (Checker checker : board.get(color)) {
             Position next;
             Position nextToNext;
