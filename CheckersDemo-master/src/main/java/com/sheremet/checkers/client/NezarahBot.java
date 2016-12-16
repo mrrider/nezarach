@@ -47,34 +47,6 @@ public class NezarahBot implements CheckersBot{
         }
         return s;
     }
-
-    
-
-    private void addStepForChecked(final Board board, Checker checker, Position next, Position nextToNext, List<Step> steps, List<Step> hits, CheckerColor checkerColor) {
-        Checker c = board.get(next);
-
-        if (c != null) {
-            if (c.getColor() != checkerColor) {
-                // if position next to opposite player check is valid and empty
-                if (nextToNext.getLetter() != null && nextToNext.getNumber() != null && board.get(nextToNext) == null) {
-                    // should not check if step is valid cause we can always hit another checker
-                    Step st = new Step(Arrays.asList(new StepUnit(checker.getPosition(), nextToNext)));
-                    if(validator.isValidStep(board, st, color))
-                        hits.add(st);
-                }
-            }
-        } else {
-            Step s = new Step(Arrays.asList(new StepUnit(checker.getPosition(), next)));
-            try {
-                // check if valid step for board
-                if(validator.isValidStep(board, s, color)){
-                    board.apply(s);
-                    steps.add(s);
-                }
-            } catch (Exception e) {
-            }
-        }
-    }
     
     private void calcStep(final Board board, List<Step> steps, List<Step> hits) {
         for (Checker checker : board.get(color)) {
@@ -117,6 +89,30 @@ public class NezarahBot implements CheckersBot{
             if (turnGo.getLetter() != null && turnGo.getNumber() != null) {
                 turnMore = new Position(turnGo.getX() + 1, turnGo.getY() - 1);
                 addStepForChecked(board, checker, turnGo, turnMore, steps, hits, color);
+            }
+        }
+    }
+
+
+    private void addStepForChecked(final Board board, Checker checker, Position next, Position nextToNext, List<Step> steps, List<Step> hits, CheckerColor checkerColor) {
+        Checker c = board.get(next);
+
+        if (c != null) {
+            if (c.getColor() != checkerColor) {
+                if (nextToNext.getLetter() != null && nextToNext.getNumber() != null && board.get(nextToNext) == null) {
+                    Step st = new Step(Arrays.asList(new StepUnit(checker.getPosition(), nextToNext)));
+                    if(validator.isValidStep(board, st, color))
+                        hits.add(st);
+                }
+            }
+        } else {
+            Step s = new Step(Arrays.asList(new StepUnit(checker.getPosition(), next)));
+            try {
+                if(validator.isValidStep(board, s, color)){
+                    board.apply(s);
+                    steps.add(s);
+                }
+            } catch (Exception e) {
             }
         }
     }
