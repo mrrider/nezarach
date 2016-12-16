@@ -48,42 +48,7 @@ public class NezarahBot implements CheckersBot{
         return s;
     }
 
-    private void calcStep(final Board board, List<Step> steps, List<Step> hits) {
-        for (Checker checker : board.get(color)) {
-            Position next;
-            Position nextToNext;
-            Position ch = checker.getPosition();
-
-            // up & right
-            next = new Position(ch.getX() + 1, ch.getY() + 1);
-            if (next.getLetter() != null && next.getNumber() != null) {
-                nextToNext = new Position(next.getX() + 1, next.getY() + 1);
-                addStepForChecked(board, checker, next, nextToNext, steps, hits, color);
-            }
-
-
-            // up & left
-            next = new Position(ch.getX() - 1, ch.getY() + 1);
-            if (next.getLetter() != null && next.getNumber() != null) {
-                nextToNext = new Position(next.getX() - 1, next.getY() + 1);
-                addStepForChecked(board, checker, next, nextToNext, steps, hits, color);
-            }
-
-            // down & left
-            next = new Position(ch.getX() - 1, ch.getY() - 1);
-            if (next.getLetter() != null && next.getNumber() != null) {
-                nextToNext = new Position(next.getX() - 1, next.getY() - 1);
-                addStepForChecked(board, checker, next, nextToNext, steps, hits, color);
-            }
-
-            // down & right
-            next = new Position(ch.getX() + 1, ch.getY() - 1);
-            if (next.getLetter() != null && next.getNumber() != null) {
-                nextToNext = new Position(next.getX() + 1, next.getY() - 1);
-                addStepForChecked(board, checker, next, nextToNext, steps, hits, color);
-            }
-        }
-    }
+    
 
     private void addStepForChecked(final Board board, Checker checker, Position next, Position nextToNext, List<Step> steps, List<Step> hits, CheckerColor checkerColor) {
         Checker c = board.get(next);
@@ -107,6 +72,51 @@ public class NezarahBot implements CheckersBot{
                     steps.add(s);
                 }
             } catch (Exception e) {
+            }
+        }
+    }
+    
+    private void calcStep(final Board board, List<Step> steps, List<Step> hits) {
+        for (Checker checker : board.get(color)) {
+            Position turnGo;
+            Position turnMore;
+            Position circle = checker.getPosition();
+
+            /*
+             *  ↑ →
+             */
+            turnGo = new Position(circle.getX() + 1, circle.getY() + 1);
+            if (turnGo.getLetter() != null && turnGo.getNumber() != null) {
+                turnMore = new Position(turnGo.getX() + 1, turnGo.getY() + 1);
+                addStepForChecked(board, checker, turnGo, turnMore, steps, hits, color);
+            }
+
+
+            /*
+             *  ↑ ←
+             */
+            turnGo = new Position(circle.getX() - 1, circle.getY() + 1);
+            if (turnGo.getLetter() != null && turnGo.getNumber() != null) {
+                turnMore = new Position(turnGo.getX() - 1, turnGo.getY() + 1);
+                addStepForChecked(board, checker, turnGo, turnMore, steps, hits, color);
+            }
+
+            /*
+             *  ↓ ←
+             */
+            turnGo = new Position(circle.getX() - 1, circle.getY() - 1);
+            if (turnGo.getLetter() != null && turnGo.getNumber() != null) {
+                turnMore = new Position(turnGo.getX() - 1, turnGo.getY() - 1);
+                addStepForChecked(board, checker, turnGo, turnMore, steps, hits, color);
+            }
+
+            /*
+             *  ↓ →
+             */
+            turnGo = new Position(circle.getX() + 1, circle.getY() - 1);
+            if (turnGo.getLetter() != null && turnGo.getNumber() != null) {
+                turnMore = new Position(turnGo.getX() + 1, turnGo.getY() - 1);
+                addStepForChecked(board, checker, turnGo, turnMore, steps, hits, color);
             }
         }
     }
